@@ -198,8 +198,9 @@ try:
                                 THEN 1 
                                 ELSE 0
                             END), 0) AS total_bronze
-        FROM atletas a
-        INNER JOIN medalhas m ON m.id_atleta = a.id
+        FROM atletas AS a
+        INNER JOIN medalhas AS m 
+            ON m.id_atleta = a.id
         GROUP BY a.nome
         ORDER BY total_bronze DESC
         LIMIT 3;
