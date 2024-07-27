@@ -130,10 +130,14 @@ try:
 
     # Consulta 1
     cur.execute('''
-        SELECT a.equipe, COUNT(medalha) AS total_medalhas
-        FROM atletas a INNER JOIN medalhas m
-        ON a.id = m.id_atleta
-        WHERE a.ano_jogos >= 1990 AND m.medalha != 'NA'
+        SELECT 
+            a.equipe, 
+            COUNT(medalha) AS total_medalhas
+        FROM atletas AS a 
+        INNER JOIN medalhas AS m
+            ON a.id = m.id_atleta
+        WHERE a.ano_jogos >= 1990 
+            AND m.medalha != 'NA'
         GROUP BY a.equipe
         ORDER BY a.equipe DESC;
     ''')
@@ -147,9 +151,16 @@ try:
 
     # Consulta 2
     cur.execute('''
-        SELECT a.nome, COALESCE(SUM(CASE WHEN m.medalha = 'Gold' THEN 1 ELSE 0 END), 0) AS total_ouro
-        FROM atletas a
-        INNER JOIN medalhas m ON m.id_atleta = a.id
+        SELECT 
+            a.nome, 
+            COALESCE(SUM(CASE 
+                            WHEN m.medalha = 'Gold' 
+                                THEN 1 
+                                ELSE 0
+                            END), 0) AS total_ouro
+        FROM atletas AS a
+        INNER JOIN medalhas AS m 
+            ON m.id_atleta = a.id
         GROUP BY a.nome
         ORDER BY total_ouro DESC
         LIMIT 3;
@@ -160,9 +171,16 @@ try:
         print(row)
 
     cur.execute('''
-        SELECT a.nome, COALESCE(SUM(CASE WHEN m.medalha = 'Silver' THEN 1 ELSE 0 END), 0) AS total_prata
-        FROM atletas a
-        INNER JOIN medalhas m ON m.id_atleta = a.id
+        SELECT 
+            a.nome, 
+            COALESCE(SUM(CASE 
+                            WHEN m.medalha = 'Silver' 
+                                THEN 1 
+                                ELSE 0 
+                            END), 0) AS total_prata
+        FROM atletas AS a
+        INNER JOIN medalhas AS m 
+            ON m.id_atleta = a.id
         GROUP BY a.nome
         ORDER BY total_prata DESC
         LIMIT 3;
@@ -173,7 +191,13 @@ try:
         print(row)
 
     cur.execute('''
-        SELECT a.nome, COALESCE(SUM(CASE WHEN m.medalha = 'Bronze' THEN 1 ELSE 0 END), 0) AS total_bronze
+        SELECT 
+            a.nome, 
+            COALESCE(SUM(CASE 
+                            WHEN m.medalha = 'Bronze' 
+                                THEN 1 
+                                ELSE 0
+                            END), 0) AS total_bronze
         FROM atletas a
         INNER JOIN medalhas m ON m.id_atleta = a.id
         GROUP BY a.nome
@@ -189,7 +213,9 @@ try:
 
     # Consulta 3
     cur.execute('''
-        SELECT nome_modalidade, MIN(ano_introducao) AS ano_introducao
+        SELECT 
+            nome_modalidade, 
+            MIN(ano_introducao) AS ano_introducao
         FROM modalidades
         GROUP BY nome_modalidade;
     ''')
@@ -203,12 +229,17 @@ try:
 
     # Consulta 4
     cur.execute('''
-        SELECT m.medalha AS quantidade_ouro
-        FROM atletas a
-        INNER JOIN times t ON a.id_time = t.id
-        INNER JOIN medalhas m ON m.id_atleta = a.id
-        INNER JOIN esportes e ON e.id_regiao = t.id
-        WHERE e.nome_esporte = 'Volleyball' AND m.medalha = 'Gold'
+        SELECT 
+            m.medalha AS quantidade_ouro
+        FROM atletas AS a
+        INNER JOIN times AS t
+            ON a.id_time = t.id
+        INNER JOIN medalhas AS m 
+            ON m.id_atleta = a.id
+        INNER JOIN esportes AS e 
+            ON e.id_regiao = t.id
+        WHERE e.nome_esporte = 'Volleyball'
+            AND m.medalha = 'Gold'
         GROUP BY t.pais;
     ''')
     result_4a = cur.fetchall()
@@ -216,12 +247,17 @@ try:
     print(result_4a)
 
     cur.execute('''
-        SELECT m.medalha AS quantidade_prata
-        FROM atletas a
-        INNER JOIN times t ON a.id_time = t.id
-        INNER JOIN medalhas m ON m.id_atleta = a.id
-        INNER JOIN esportes e ON e.id_regiao = t.id
-        WHERE e.nome_esporte = 'Volleyball' AND m.medalha = 'Silver'
+        SELECT 
+            m.medalha AS quantidade_prata
+        FROM atletas AS a
+        INNER JOIN times AS t 
+            ON a.id_time = t.id
+        INNER JOIN medalhas AS m 
+            ON m.id_atleta = a.id
+        INNER JOIN esportes AS e 
+            ON e.id_regiao = t.id
+        WHERE e.nome_esporte = 'Volleyball' 
+            AND m.medalha = 'Silver'
         GROUP BY t.pais;
     ''')
     result_4b = cur.fetchall()
@@ -229,12 +265,17 @@ try:
     print(result_4b)
 
     cur.execute('''
-        SELECT m.medalha AS quantidade_bronze
-        FROM atletas a
-        INNER JOIN times t ON a.id_time = t.id
-        INNER JOIN medalhas m ON m.id_atleta = a.id
-        INNER JOIN esportes e ON e.id_regiao = t.id
-        WHERE e.nome_esporte = 'Volleyball' AND m.medalha = 'Bronze'
+        SELECT 
+            m.medalha AS quantidade_bronze
+        FROM atletas AS a
+        INNER JOIN times AS t 
+            ON a.id_time = t.id
+        INNER JOIN medalhas AS m 
+            ON m.id_atleta = a.id
+        INNER JOIN esportes AS e 
+            ON e.id_regiao = t.id
+        WHERE e.nome_esporte = 'Volleyball' 
+            AND m.medalha = 'Bronze'
         GROUP BY t.pais;
     ''')
     result_4c = cur.fetchall()
@@ -245,9 +286,15 @@ try:
 
     # Consulta 5
     cur.execute('''
-        SELECT ano_jogos, temporada, AVG(total_atletas) AS media_atletas
+        SELECT 
+            ano_jogos, 
+            temporada, 
+            AVG(total_atletas) AS media_atletas
         FROM (
-            SELECT ano_jogos, temporada, COUNT(*) AS total_atletas
+            SELECT 
+                ano_jogos, 
+                temporada, 
+                COUNT(*) AS total_atletas
             FROM atletas
             WHERE ano_jogos >= 1920
             GROUP BY ano_jogos, temporada
@@ -266,10 +313,14 @@ try:
     # Consulta 6
     cur.execute('''
         SELECT sexo, 
-            CASE WHEN a.ano_jogos < 1950 THEN 'Antes de 1950' ELSE 'Depois de 1950' END AS periodo,
+            CASE 
+                WHEN a.ano_jogos < 1950 
+                    THEN 'Antes de 1950' 
+                    ELSE 'Depois de 1950' 
+                END AS periodo,
             COUNT(*) AS quantidade_atletas,
             ROUND(CAST(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (PARTITION BY a.ano_jogos) AS NUMERIC), 2) AS proporcao
-        FROM atletas a
+        FROM atletas AS a
         WHERE a.ano_jogos >= 1920
         GROUP BY periodo, sexo, a.ano_jogos
         ORDER BY periodo, sexo;
